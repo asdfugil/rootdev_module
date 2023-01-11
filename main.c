@@ -8,13 +8,14 @@ char* set_rootdev(const char* rootdev) {
 	dt_node_t* dev = dt_find(gDeviceTree, "chosen");
 	char str[256] = "<dict ID=\"0\"><key>IOProviderClass</key><string ID=\"1\">IOService</string><key>BSD Name</key><string ID=\"2\">";
 	char* val = (char*)dt_prop(dev, "root-matching", &len);
-	strcat(str, rootdev);
-	strcat(str, "</string></dict>");
-	memset((void*)val, 0x0, 256);
-	if (strlen(str) > 255) {
+	/* Only the NULL at last is counted, so 256 */
+	if (strlen(str) + strlen(rootdev) + sizeof("</string></dict>") > 256) {
 		errno = ENAMETOOLONG;
 		return NULL;
 	}
+	strcat(str, rootdev);
+	strcat(str, "</string></dict>");
+	memset((void*)val, 0x0, 256);
 	snprintf(val, 256, "%s", str);
 	return val;
 }
