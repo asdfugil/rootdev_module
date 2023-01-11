@@ -6,5 +6,5 @@
  * @param rootdev A pointer to the new root device string
  * @returns A pointer to the modified root-matching devicetree node
  */
-char* set_rootdev(char* rootdev);
+char* set_rootdev(const char* rootdev);
 #endif
